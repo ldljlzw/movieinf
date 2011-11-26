@@ -22,7 +22,7 @@ debug: netinf
 
 # COMPILE
 
-netinf: netinf.cpp Snap.o
+netinf: netinf.cpp cascinf.cpp Snap.o
 	g++ -o netinf netinf.cpp cascinf.cpp Snap.o -I./glib -I./snap $(LDFLAGS)
 	
 Snap.o: 

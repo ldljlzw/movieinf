@@ -514,6 +514,9 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     bool msort = false;
 
     for (int k = 0; k < MxEdges && EdgeGainV.Len() > 0; k++) {
+        int percent1 = MxEdges * 0.01;
+        if(k % percent1 == 0)
+            printf("%d\%\n", k * 100 / MxEdges); 
       double prev = CurProb;
 
       const TIntPr BestE = GetBestEdge(CurProb, LastGain, msort, attempts);
