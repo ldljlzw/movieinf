@@ -3,8 +3,8 @@
 #
 
 ## Linux  (uncomment the 2 lines below for compilation on Linux)
-#CXXFLAGS += -std=c++98 -Wall -ggdb
-#LDFLAGS += 
+CXXFLAGS += -std=c++98 -Wall -ggdb
+LDFLAGS += -lrt 
 
 ## CygWin (uncomment the 2 lines below for compilation on CygWin)
 #CXXFLAGS += -Wall
@@ -23,7 +23,7 @@ debug: netinf
 # COMPILE
 
 netinf: netinf.cpp Snap.o
-	g++ $(LDFLAGS) -o netinf netinf.cpp cascinf.cpp Snap.o -I./glib -I./snap
+	g++ -o netinf netinf.cpp cascinf.cpp Snap.o -I./glib -I./snap $(LDFLAGS)
 	
 Snap.o: 
 	g++ -c $(CXXFLAGS) ./snap/Snap.cpp -I./glib -I./snap

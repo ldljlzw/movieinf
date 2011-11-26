@@ -1,0 +1,9 @@
+*
+
+!./**/*.cpp
+!./**/*.c
+!./**/*.h
+
+!Makefile
+!.gitignore
+!ReadMe.txt
