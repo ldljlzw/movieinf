@@ -29,4 +29,4 @@ Snap.o:
 	g++ -c $(CXXFLAGS) ./snap/Snap.cpp -I./glib -I./snap
 
 clean:
-	rm -rf   netinf *.dSYM 
+	rm -rf   netinf *.o *.dSYM 
