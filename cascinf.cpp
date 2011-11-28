@@ -512,6 +512,8 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     double LastGain = TFlt::Mx;
     int attempts = 0;
     bool msort = false;
+	double avgAvgTimeDiff = 0.0;    
+	int avgCount = 0;
 
     for (int k = 0; k < MxEdges && EdgeGainV.Len() > 0; k+=2) {
         //int percent1 = MxEdges * 0.01;
@@ -584,11 +586,14 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
 
       if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2) ||
               GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
-          printf("%s,%s,%f\n", NodeNmH.GetDat(BestE.Val1.Val).Name.CStr(), NodeNmH.GetDat(BestE.Val2.Val).Name.CStr(), AverageTimeDiff.Val);
+	avgAvgTimeDiff += AverageTimeDiff.Val;
+	++avgCount;
+	printf("%f\n", AverageTimeDiff.Val);
+         // printf("%s,%s,%f\n", NodeNmH.GetDat(BestE.Val1.Val).Name.CStr(), NodeNmH.GetDat(BestE.Val2.Val).Name.CStr(), AverageTimeDiff.Val);
       }
 
     }
-
+	printf("average time diff: %f, for %d edges\n", avgAvgTimeDiff/avgCount, avgCount);
     
 
 
