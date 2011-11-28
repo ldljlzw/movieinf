@@ -513,13 +513,14 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     int attempts = 0;
     bool msort = false;
 
-    for (int k = 0; k < MxEdges && EdgeGainV.Len() > 0; k++) {
-        int percent1 = MxEdges * 0.01;
-        if(k % percent1 == 0)
-            printf("%d\%\n", k * 100 / MxEdges); 
+    for (int k = 0; k < MxEdges && EdgeGainV.Len() > 0; k+=2) {
+        //int percent1 = MxEdges * 0.01;
+        //if(k % percent1 == 0)
+            //printf("%d%%\n", k * 100 / MxEdges); 
       double prev = CurProb;
 
       const TIntPr BestE = GetBestEdge(CurProb, LastGain, msort, attempts);
+      const TIntPr BestEReverse = TIntPr(BestE.Val2, BestE.Val1);
       if (BestE == TIntPr(-1, -1)) // if we cannot add more edges, we stop
     	  break;
 
@@ -529,16 +530,22 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     		  precision = PrecisionRecall[PrecisionRecall.Len()-1].Val2.Val;
     		  recall = PrecisionRecall[PrecisionRecall.Len()-1].Val1.Val;
     	  }
-    	  if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2)) {
-			  recall++;
-		  }	else {
-			  precision++;
-		  }
+          if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2)) {
+              recall++;
+          }	else {
+              precision++;
+          }
 
+          if (GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
+              recall++;
+          }	else {
+              precision++;
+          }
     	  PrecisionRecall.Add(TPair<TFlt, TFlt>(recall, precision));
       }
 
       Graph->AddEdge(BestE.Val1, BestE.Val2); // add edge to network
+      Graph->AddEdge(BestEReverse.Val1, BestEReverse.Val2); // add reverse edge
 
       double Bound = 0;
       if (BoundOn)
@@ -549,6 +556,13 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
       for (int c = 0; c < CascsEdge.Len(); c++) {
     	  CascV[CascsEdge[c]].UpdateProb(BestE.Val1, BestE.Val2, true); // update probabilities
       }
+/*
+ *
+ *      CascsEdge = CascPerEdge.GetDat(BestEReverse); // only check cascades that contain the edge
+ *      for (int c = 0; c < CascsEdge.Len(); c++) {
+ *    	  CascV[CascsEdge[c]].UpdateProb(BestEReverse.Val1, BestEReverse.Val2, true); // update probabilities
+ *      }
+ */
 
       // some extra info for the added edge
       TInt Vol; TFlt AverageTimeDiff; TFltV TimeDiffs;
@@ -566,11 +580,17 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
 
       // compute bound only if explicitly required
       EdgeInfoH.AddDat(BestE) = TEdgeInfo(Vol,
-										  LastGain,
-										  Bound,
-										  TimeDiffs[(int)(TimeDiffs.Len()/2)],
-										  AverageTimeDiff);
+              LastGain, Bound, TimeDiffs[(int)(TimeDiffs.Len()/2)], AverageTimeDiff);
+
+      if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2) ||
+              GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
+          printf("%s,%s,%f\n", NodeNmH.GetDat(BestE.Val1.Val).Name.CStr(), NodeNmH.GetDat(BestE.Val2.Val).Name.CStr(), AverageTimeDiff.Val);
+      }
+
     }
+
+    
+
 
     if (CompareGroundTruth) {
   	  for (int i=0; i<PrecisionRecall.Len(); i++) {
