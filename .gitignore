@@ -6,5 +6,6 @@
 
 !.gitignore
 !ReadMe.txt
+!Makefile
 !example-cascades.txt
 !example-network.txt
