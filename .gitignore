@@ -4,7 +4,6 @@
 !./**/*.c
 !./**/*.h
 
-!Makefile
 !.gitignore
 !ReadMe.txt
 !example-cascades.txt
