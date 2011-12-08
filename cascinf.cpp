@@ -516,9 +516,9 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
 	int avgCount = 0;
 
     for (int k = 0; k < MxEdges && EdgeGainV.Len() > 0; k+=2) {
-        //int percent1 = MxEdges * 0.01;
-        //if(k % percent1 == 0)
-            //printf("%d%%\n", k * 100 / MxEdges); 
+        int percent1 = MxEdges * 0.01;
+        if(k % percent1 == 0)
+            printf("%d%%\n", k * 100 / MxEdges); 
       double prev = CurProb;
 
       const TIntPr BestE = GetBestEdge(CurProb, LastGain, msort, attempts);
@@ -534,11 +534,13 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     	  }
           if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2)) {
               recall++;
+              printf("Original: %d -> %d\n", BestE.Val1, BestE.Val2);
           }	else {
               precision++;
           }
 
           if (GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
+              printf("Original: %d -> %d\n", BestEReverse.Val1, BestEReverse.Val2);
               recall++;
           }	else {
               precision++;
