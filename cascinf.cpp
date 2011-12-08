@@ -371,15 +371,10 @@ void TNetInfBs::Init() {
     for (TNGraph::TNodeI NI = Graph->BegNI(); NI < Graph->EndNI(); NI++) {
     	TIntV &Cascs = CascPN.GetDat(NI.GetId());
     	for (int c = 0; c < Cascs.Len(); c++) {
-                CascV[Cascs[c]].Sort();
-                int NPosInC = -1;
     		for (int i=0; i < CascV[Cascs[c]].Len(); i++) {
-                    if (CascV[Cascs[c]].GetNode(i)==NI.GetId()){
-                        NPosInC = i; break;
-                    }
-                }
+    			if (CascV[Cascs[c]].GetNode(i)==NI.GetId())
+    				continue;
 
-    		for (int i=NPosInC; i >= 0 && NPosInC - i <= 1; i--) {
     			if (CascV[Cascs[c]].GetTm(CascV[Cascs[c]].GetNode(i)) < CascV[Cascs[c]].GetTm(NI.GetId()) ) {
     				if (!CascPerEdge.IsKey(TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId()))) {
     					EdgeGainV.Add(TPair<TFlt, TIntPr>(TFlt::Mx, TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId())));
@@ -521,9 +516,9 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
 	int avgCount = 0;
 
     for (int k = 0; k < MxEdges && EdgeGainV.Len() > 0; k+=2) {
-        int percent1 = MxEdges * 0.01;
-        if(k % percent1 == 0)
-            printf("%d%%\n", k * 100 / MxEdges); 
+        //int percent1 = MxEdges * 0.01;
+        //if(k % percent1 == 0)
+            //printf("%d%%\n", k * 100 / MxEdges); 
       double prev = CurProb;
 
       const TIntPr BestE = GetBestEdge(CurProb, LastGain, msort, attempts);
@@ -539,13 +534,11 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     	  }
           if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2)) {
               recall++;
-              //printf("Original: %d -> %d\n", BestE.Val1, BestE.Val2);
           }	else {
               precision++;
           }
 
           if (GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
-              //printf("Original: %d -> %d\n", BestEReverse.Val1, BestEReverse.Val2);
               recall++;
           }	else {
               precision++;
