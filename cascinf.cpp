@@ -534,13 +534,11 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     	  }
           if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2)) {
               recall++;
-              printf("Original: %d -> %d\n", BestE.Val1, BestE.Val2);
           }	else {
               precision++;
           }
 
           if (GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
-              printf("Original: %d -> %d\n", BestEReverse.Val1, BestEReverse.Val2);
               recall++;
           }	else {
               precision++;
