@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
   const TStr Iters  = Env.GetIfArgPrefixStr("-e:", "5", "Number of iterations");
   const double alpha = Env.GetIfArgPrefixFlt("-a:", 1.0, "Alpha for transmission model");
   const int Model = Env.GetIfArgPrefixInt("-m:", 0, "0:exponential, 1:power law, 2:rayleigh");
+  const int Top =Env.GetIfArgPrefixInt("-t:", 10, "select top k as friends");
   const int TakeAdditional = Env.GetIfArgPrefixInt("-s:", 1, "How much additional files to create?\n\
     1:info about each edge, 2:objective function value (+upper bound), 3:Precision-recall plot, 4:all-additional-files (default:1)\n");
 
@@ -26,7 +27,7 @@ int main(int argc, char* argv[]) {
      default: FailR("Bad -s: parameter.");
   }
 
-  TNetInfBs NIB(ComputeBound, CompareGroundTruth);
+  TNetInfBs NIB(ComputeBound, CompareGroundTruth, Top);
   printf("\nLoading input cascades: %s\n", InFNm.CStr());
 
   // load cascade from file

@@ -19,7 +19,7 @@ public:
 // Cascade
 class TCascade {
 public:
-  static const double EPS = 1e-16;
+  static const double EPS = 1e-64;
   THash<TInt, THitInfo> NIdHitH;
   TFlt CurProb, Alpha;
   TInt Model;
@@ -95,9 +95,11 @@ public:
 
   TIntPrFltH Alphas, Betas;
 
+  int Top;
+
 public:
   TNetInfBs( ) { BoundOn = false; CompareGroundTruth=false; }
-  TNetInfBs(bool bo, bool cgt) { BoundOn=bo; CompareGroundTruth=cgt; }
+  TNetInfBs(bool bo, bool cgt, int top) { BoundOn=bo; CompareGroundTruth=cgt; Top = top; }
   TNetInfBs(TSIn& SIn) : CascV(SIn), NodeNmH(SIn) { }
   void Save(TSOut& SOut) const { CascV.Save(SOut); NodeNmH.Save(SOut); }
 

@@ -2,16 +2,21 @@
 #include "cascinf.h"
 
 double TCascade::TransProb(const int& NId1, const int& NId2) const {
-	if (! IsNode(NId1) || ! IsNode(NId2)) { return Eps; }
-	if (GetTm(NId1) >= GetTm(NId2)) { return Eps; }
-	if (Model==0)
-		return Alpha*exp(-Alpha*(GetTm(NId2)-GetTm(NId1))); // exponential
-	else if (Model==1)
-		return (Alpha-1)*pow((GetTm(NId2)-GetTm(NId1)), -Alpha); // power-law
-	else
-		return Alpha*(GetTm(NId2)-GetTm(NId1))*exp(-0.5*Alpha*pow(GetTm(NId2)-GetTm(NId1), 2)); // rayleigh
 
-	return (-1);
+    if (! IsNode(NId1) || ! IsNode(NId2)) { return Eps; }
+    if (GetTm(NId1) >= GetTm(NId2)) { return Eps; }
+
+    //if (Model==0)
+        //return Alpha*exp(-Alpha*(GetTm(NId2)-GetTm(NId1))); // exponential
+    //else if (Model==1)
+        //return (Alpha-1)*pow((GetTm(NId2)-GetTm(NId1)), -Alpha); // power-law
+    //else
+        //return Alpha*(GetTm(NId2)-GetTm(NId1))*exp(-0.5*Alpha*pow(GetTm(NId2)-GetTm(NId1), 2)); // rayleigh
+
+    //return (-1.0);
+
+
+    return 1e-16;
 }
 
 double TCascade::GetProb(const PNGraph& G) {
@@ -379,7 +384,7 @@ void TNetInfBs::Init() {
                     }
                 }
 
-    		for (int i=NPosInC; i >= 0 && NPosInC - i <= 1; i--) {
+    		for (int i=NPosInC; i >= 0 && NPosInC - i <= Top; i--) {
     			if (CascV[Cascs[c]].GetTm(CascV[Cascs[c]].GetNode(i)) < CascV[Cascs[c]].GetTm(NI.GetId()) ) {
     				if (!CascPerEdge.IsKey(TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId()))) {
     					EdgeGainV.Add(TPair<TFlt, TIntPr>(TFlt::Mx, TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId())));
@@ -521,9 +526,9 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
 	int avgCount = 0;
 
     for (int k = 0; k < MxEdges && EdgeGainV.Len() > 0; k+=2) {
-        int percent1 = MxEdges * 0.01;
-        if(k % percent1 == 0)
-            printf("%d%%\n", k * 100 / MxEdges); 
+        //int percent1 = MxEdges * 0.01;
+        //if(k % percent1 == 0)
+            //printf("%d%%\n", k * 100 / MxEdges); 
       double prev = CurProb;
 
       const TIntPr BestE = GetBestEdge(CurProb, LastGain, msort, attempts);
@@ -538,14 +543,22 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
     		  recall = PrecisionRecall[PrecisionRecall.Len()-1].Val1.Val;
     	  }
           if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2)) {
+              //int sharedMovie = 0;
+              //if(CascPerEdge.IsKey(BestE))
+                  //sharedMovie = CascPerEdge.GetDat(BestE).Len();
+              //printf("%d -> %d watched %d movies together\n",
+                      //BestE.Val1.Val, BestE.Val2.Val, sharedMovie);
               recall++;
-              //printf("Original: %d -> %d\n", BestE.Val1, BestE.Val2);
           }	else {
               precision++;
           }
 
           if (GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
-              //printf("Original: %d -> %d\n", BestEReverse.Val1, BestEReverse.Val2);
+              //int sharedMovie = 0;
+              //if(CascPerEdge.IsKey(BestEReverse))
+                  //sharedMovie = CascPerEdge.GetDat(BestEReverse).Len();
+              //printf("%d -> %d watched %d movies together\n",
+                      //BestEReverse.Val1.Val, BestEReverse.Val2.Val, sharedMovie);
               recall++;
           }	else {
               precision++;
@@ -600,7 +613,7 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
       }
 
     }
-	printf("average time diff: %f, for %d edges\n", avgAvgTimeDiff/avgCount, avgCount);
+	//printf("average time diff: %f, for %d edges\n", avgAvgTimeDiff/avgCount, avgCount);
     
 
 
