@@ -6,17 +6,17 @@ double TCascade::TransProb(const int& NId1, const int& NId2) const {
     if (! IsNode(NId1) || ! IsNode(NId2)) { return Eps; }
     if (GetTm(NId1) >= GetTm(NId2)) { return Eps; }
 
-    //if (Model==0)
-        //return Alpha*exp(-Alpha*(GetTm(NId2)-GetTm(NId1))); // exponential
-    //else if (Model==1)
-        //return (Alpha-1)*pow((GetTm(NId2)-GetTm(NId1)), -Alpha); // power-law
-    //else
-        //return Alpha*(GetTm(NId2)-GetTm(NId1))*exp(-0.5*Alpha*pow(GetTm(NId2)-GetTm(NId1), 2)); // rayleigh
+    if (Model==0)
+        return Alpha*exp(-Alpha*(GetTm(NId2)-GetTm(NId1))); // exponential
+    else if (Model==1)
+        return (Alpha-1)*pow((GetTm(NId2)-GetTm(NId1)), -Alpha); // power-law
+    else
+        return Alpha*(GetTm(NId2)-GetTm(NId1))*exp(-0.5*Alpha*pow(GetTm(NId2)-GetTm(NId1), 2)); // rayleigh
 
-    //return (-1.0);
+    return (-1.0);
 
 
-    return 1e-16;
+    //return 1e-16;
 }
 
 double TCascade::GetProb(const PNGraph& G) {
@@ -608,7 +608,7 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
               GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
 	avgAvgTimeDiff += AverageTimeDiff.Val;
 	++avgCount;
-	printf("%f\n", AverageTimeDiff.Val);
+	//printf("%f\n", AverageTimeDiff.Val);
          // printf("%s,%s,%f\n", NodeNmH.GetDat(BestE.Val1.Val).Name.CStr(), NodeNmH.GetDat(BestE.Val2.Val).Name.CStr(), AverageTimeDiff.Val);
       }
 
@@ -622,6 +622,7 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
   		  PrecisionRecall[i].Val2 = 1.0 - PrecisionRecall[i].Val2/(PrecisionRecall[i].Val2+PrecisionRecall[i].Val1);
   		  PrecisionRecall[i].Val1 /= (double)GroundTruth->GetEdges();
   	  }
+          printf("Precision:%f, Recall: %f \n", PrecisionRecall[PrecisionRecall.Len()-1].Val2.Val, PrecisionRecall[PrecisionRecall.Len()-1].Val1.Val);
     }
 }
 
