@@ -375,16 +375,31 @@ void TNetInfBs::Init() {
     // only add edges that make sense (i.e., at least once coherent in time)
     for (TNGraph::TNodeI NI = Graph->BegNI(); NI < Graph->EndNI(); NI++) {
     	TIntV &Cascs = CascPN.GetDat(NI.GetId());
-    	for (int c = 0; c < Cascs.Len(); c++) {
-                CascV[Cascs[c]].Sort();
-                int NPosInC = -1;
-    		for (int i=0; i < CascV[Cascs[c]].Len(); i++) {
-                    if (CascV[Cascs[c]].GetNode(i)==NI.GetId()){
-                        NPosInC = i; break;
-                    }
-                }
+    	//for (int c = 0; c < Cascs.Len(); c++) {
+                //CascV[Cascs[c]].Sort();
+                //int NPosInC = -1;
+    		//for (int i=0; i < CascV[Cascs[c]].Len(); i++) {
+                //    if (CascV[Cascs[c]].GetNode(i)==NI.GetId()){
+                //        NPosInC = i; break;
+                //    }
+                //}
 
-    		for (int i=NPosInC; i >= 0 && NPosInC - i <= Top; i--) {
+    		//for (int i=NPosInC; i >= 0 && NPosInC - i <= Top; i--) {
+    		//	if (CascV[Cascs[c]].GetTm(CascV[Cascs[c]].GetNode(i)) < CascV[Cascs[c]].GetTm(NI.GetId()) ) {
+    	        //			if (!CascPerEdge.IsKey(TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId()))) {
+    		//			EdgeGainV.Add(TPair<TFlt, TIntPr>(TFlt::Mx, TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId())));
+    		//			CascPerEdge.AddDat(TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId())) = TIntV();
+    		//		}
+    		//		// Add cascade to hash of cascades per edge (to implement localized update)
+    		//		CascPerEdge.GetDat(TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId())).Add(Cascs[c]);
+    		//	}
+    		//}
+
+        for (int c = 0; c < Cascs.Len(); c++) {
+    		for (int i=0; i < CascV[Cascs[c]].Len(); i++) {
+    			if (CascV[Cascs[c]].GetNode(i)==NI.GetId())
+    				continue;
+
     			if (CascV[Cascs[c]].GetTm(CascV[Cascs[c]].GetNode(i)) < CascV[Cascs[c]].GetTm(NI.GetId()) ) {
     				if (!CascPerEdge.IsKey(TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId()))) {
     					EdgeGainV.Add(TPair<TFlt, TIntPr>(TFlt::Mx, TIntPr(CascV[Cascs[c]].GetNode(i), NI.GetId())));
@@ -395,6 +410,7 @@ void TNetInfBs::Init() {
     			}
     		}
     	}
+    	
     }
 }
 
@@ -604,13 +620,13 @@ void TNetInfBs::GreedyOpt(const int& MxEdges) {
       EdgeInfoH.AddDat(BestE) = TEdgeInfo(Vol,
               LastGain, Bound, TimeDiffs[(int)(TimeDiffs.Len()/2)], AverageTimeDiff);
 
-      if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2) ||
-              GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
-	avgAvgTimeDiff += AverageTimeDiff.Val;
-	++avgCount;
+      //if (GroundTruth->IsEdge(BestE.Val1, BestE.Val2) ||
+      //        GroundTruth->IsEdge(BestEReverse.Val1, BestEReverse.Val2)) {
+	//avgAvgTimeDiff += AverageTimeDiff.Val;
+	//++avgCount;
 	//printf("%f\n", AverageTimeDiff.Val);
          // printf("%s,%s,%f\n", NodeNmH.GetDat(BestE.Val1.Val).Name.CStr(), NodeNmH.GetDat(BestE.Val2.Val).Name.CStr(), AverageTimeDiff.Val);
-      }
+      //}
 
     }
 	//printf("average time diff: %f, for %d edges\n", avgAvgTimeDiff/avgCount, avgCount);
